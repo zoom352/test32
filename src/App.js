@@ -28,7 +28,7 @@ const App = () => {
 
   const [fetchPosts, isPostsLoading] = useFetching(async (selectedLimit, selectedPage, filter) => {
     const response = await PostService.getAll(selectedLimit, selectedPage, filter)
-      setPhoto(new Set([...photo, ...response.data]))
+      setPhoto([...photo, ...response.data])
       const totalCount = response.headers['x-total-count']
       setTotalPages(getPageCount(totalCount, limit))
   })
@@ -54,13 +54,14 @@ const App = () => {
 
 
   useEffect(() => {
-    fetchPosts(limit, page)
+
+    fetchPosts(limit, page, selectedAlbumIds.length &&{albumId:selectedAlbumIds})
   }, [page])
 
   useEffect(() => {
     setPhoto([])
-    const filter = selectedAlbumIds.join(',')
-    fetchPosts(limit, page, filter.length &&{albumId:filter})
+
+    fetchPosts(limit, page, selectedAlbumIds.length &&{albumId:selectedAlbumIds})
   }, [selectedAlbumIds])
 
   const removePosts = (id) => {
@@ -86,7 +87,7 @@ const App = () => {
   }
 
   // response.sort((a, b) => a.albumId - b.albumId)
-
+  console.log(photo)
   return (
 
     <div className="App">
